@@ -1,11 +1,14 @@
 import 'react-native-gesture-handler'; 
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, FlatList } from 'react-native';
 import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import { Button } from 'react-native-paper';
+import { Button, Divider,} from 'react-native-elements';
+
+
+//ホーム画面
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -20,21 +23,81 @@ function HomeScreen() {
     >
       <Image
           style={{
-            width: 256,
-            height: 256
+            width: 306,
+            height: 210
           }}
-          source={require('./assets/study_picture.jpg')}
+          source={require('./assets/pencil.jpg')}
       />
-      <Text style={styles.titlefont}>Home Screen</Text>
+      <Text style={styles.titlefont}>SR Workbook</Text>
       <View style={styles.buttonContainer}>
-      <Button 
-        mode="contained" onPress={() => navigation.navigate('Detail')} >
-          詳細へ
-      </Button>
+      <Button
+        icon={{name:'eye', type: 'octicon'}} 
+        raised
+        stlle={{
+          backgroundColor: "#FE434C",
+          borderColor: "transparent",
+          borderRadius:20,
+          width: 300
+        }} 
+        onPress={() => navigation.navigate('List')} 
+        title = "問題一覧へ"
+      />
       </View>
     </View>
   );
 }
+
+//問題の分野一覧のリストを表示する
+function ListScreen() {
+  const navigation = useNavigation();
+
+  const data = [
+    {str: '労働基準法', key: 'Taro'},
+    {str: '労働者災害補償保険法', key: 'Jiro'},
+    {str: '健康保険法', key: 'Saburo'},
+  ];
+
+  return (
+    <View 
+      style={{ 
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding:20
+      }}      
+    >
+      
+      <View style={{backgroundColor:'#5bcaff'}}>
+        <Text style={styles.titlefont}> 問題の一覧 </Text>
+      </View>
+      <Text></Text>
+      <FlatList
+        data={data}
+        renderItem={({item})=> {
+          return <View style = {styles.listItem}>
+            <Text key={item.key} style={{marginBottom:10, fontSize:18}}>{item.str}</Text></View>
+        }}
+      />
+      <Button
+        icon={{name:'eye', type: 'octicon'}} 
+        raised
+        stlle={{
+          backgroundColor: "#FE434C",
+          borderColor: "transparent",
+          borderRadius:20,
+          width: 300
+        }} 
+        onPress={() => navigation.navigate('Detail')} 
+        title = "問題一覧へ"
+      />
+
+    </View>
+  );
+}
+
+
+
+//問題一覧のページ
 
 function DetailScreen() {
   const navigation = useNavigation();
@@ -48,14 +111,9 @@ function DetailScreen() {
       }}
     >
       <Text>Detail Screen</Text>
-      <Button  
-        onPress={() => navigation.navigate('Question')} mode="contained">
-          詳細へ
-      </Button>
+      
       <Text></Text>
-      <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-                Press me
-      </Button>
+      
 
       <View style={{
         flex: 1,
@@ -92,6 +150,9 @@ const Stack = createStackNavigator();
 
 
 export default function App() {
+
+  
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -99,6 +160,9 @@ export default function App() {
         <Stack.Screen 
           name="Home" 
           component={HomeScreen} />
+        <Stack.Screen 
+          name="List" 
+          component={ListScreen} />
         <Stack.Screen 
           name="Detail" 
           component={DetailScreen} />
@@ -127,12 +191,20 @@ const styles = StyleSheet.create({
     // 略
   },
   buttonContainer: {
-    height: 70,
-    width: 100,
+    height: 100,
     padding: 10,
-    backgroundColor: '#9dceff',
     margin: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  base:{ padding:25 },
+  listItem:{
+    padding:18,
+    borderBottomWidth:1,
+    borderBottomColor:'#ddd',
+  },
+  listTitle:{
+    fontSize:18,
+    marginBottom:15,
+  }
 });
